@@ -22,6 +22,15 @@ NORMAL_PRESSURE = 5.5
 
 NORMAL_FLOW = 10             # L/min
 
+# ==========================================
+# VIBRATION SENSOR
+# ==========================================
+
+NORMAL_VIBRATION = 0.4      # mm/s
+
+MAX_VIBRATION = 4.0
+MIN_VIBRATION = 0.2
+
 
 # ==========================================
 # HEALTH SCORE

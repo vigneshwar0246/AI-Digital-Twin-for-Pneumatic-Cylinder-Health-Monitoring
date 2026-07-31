@@ -2,6 +2,8 @@
 Virtual Pneumatic Cylinder
 """
 
+import random
+
 from backend.config.constants import *
 from backend.simulator.sensors import VirtualSensors
 from backend.simulator.faults import FaultEngine
@@ -20,6 +22,9 @@ class PneumaticCylinder:
         self.position = 0
         self.flow = VirtualSensors.get_flow()
         self.speed = VirtualSensors.get_speed()
+
+        # New Sensor
+        self.vibration = NORMAL_VIBRATION
 
         # Statistics
         self.cycle_count = 0
@@ -45,6 +50,25 @@ class PneumaticCylinder:
 
         # Apply Fault (if any)
         FaultEngine.apply_fault(self)
+
+        # -------------------------------------
+        # Vibration Simulation
+        # -------------------------------------
+
+        if self.fault == HEALTHY:
+            self.vibration = random.uniform(0.2, 0.6)
+
+        elif self.fault == AIR_LEAKAGE:
+            self.vibration = random.uniform(0.8, 1.2)
+
+        elif self.fault == SEAL_WEAR:
+            self.vibration = random.uniform(1.5, 2.5)
+
+        elif self.fault == VALVE_STICKING:
+            self.vibration = random.uniform(2.5, 4.0)
+
+        elif self.fault == PRESSURE_DROP:
+            self.vibration = random.uniform(1.0, 2.0)
 
     # -------------------------------------
     # Move Forward
@@ -87,6 +111,7 @@ class PneumaticCylinder:
         print(f"Position      : {self.position} mm")
         print(f"Flow          : {self.flow:.2f} L/min")
         print(f"Speed         : {self.speed:.2f} mm/s")
+        print(f"Vibration     : {self.vibration:.2f} mm/s")
         print(f"Cycle Count   : {self.cycle_count}")
         print(f"Health Score  : {self.health}")
         print(f"Fault         : {self.fault}")

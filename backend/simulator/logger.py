@@ -1,6 +1,6 @@
 """
 Dataset Logger
-Saves every simulation step into a CSV file.
+Saves Digital Twin sensor data into CSV
 """
 
 import csv
@@ -11,22 +11,14 @@ class DatasetLogger:
 
     def __init__(self):
 
-        # Folder to store generated datasets
-        self.dataset_folder = "datasets/simulated"
+        self.file_path = "datasets/simulated/pneumatic_dataset.csv"
 
-        # Dataset filename
-        self.dataset_file = os.path.join(
-            self.dataset_folder,
-            "pneumatic_dataset.csv"
-        )
+        os.makedirs("datasets/simulated", exist_ok=True)
 
-        # Create folder if it doesn't exist
-        os.makedirs(self.dataset_folder, exist_ok=True)
+        # Create CSV with Header
+        if not os.path.exists(self.file_path):
 
-        # Create CSV file with header if it doesn't exist
-        if not os.path.exists(self.dataset_file):
-
-            with open(self.dataset_file, "w", newline="") as file:
+            with open(self.file_path, "w", newline="") as file:
 
                 writer = csv.writer(file)
 
@@ -39,12 +31,16 @@ class DatasetLogger:
                     "Speed",
                     "CycleCount",
                     "Health",
-                    "Fault"
+                    "Fault",
+                    "Vibration"
                 ])
 
+    # ---------------------------------------
+    # Save one sensor reading
+    # ---------------------------------------
     def log(self, time_step, cylinder):
 
-        with open(self.dataset_file, "a", newline="") as file:
+        with open(self.file_path, "a", newline="") as file:
 
             writer = csv.writer(file)
 
@@ -57,5 +53,6 @@ class DatasetLogger:
                 round(cylinder.speed, 2),
                 cylinder.cycle_count,
                 cylinder.health,
-                cylinder.fault
+                cylinder.fault,
+                round(cylinder.vibration, 2)
             ])
