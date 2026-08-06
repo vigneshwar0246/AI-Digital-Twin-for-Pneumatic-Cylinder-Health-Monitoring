@@ -22,14 +22,25 @@ NORMAL_PRESSURE = 5.5
 
 NORMAL_FLOW = 10             # L/min
 
+
 # ==========================================
 # VIBRATION SENSOR
 # ==========================================
 
-NORMAL_VIBRATION = 0.4      # mm/s
+NORMAL_VIBRATION = 0.4       # mm/s
 
-MAX_VIBRATION = 4.0
 MIN_VIBRATION = 0.2
+MAX_VIBRATION = 4.0
+
+
+# ==========================================
+# LOAD SENSOR
+# ==========================================
+
+NORMAL_LOAD = 15             # kg
+
+MIN_LOAD = 5                 # kg
+MAX_LOAD = 50                # kg
 
 
 # ==========================================

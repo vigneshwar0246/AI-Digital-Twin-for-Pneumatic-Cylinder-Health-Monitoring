@@ -16,14 +16,17 @@ class PneumaticCylinder:
 
     def __init__(self):
 
+        # Load Sensor (Initialize first)
+        self.load = NORMAL_LOAD
+
         # Initial Sensor Values
-        self.pressure = VirtualSensors.get_pressure()
+        self.pressure = VirtualSensors.get_pressure(self.load)
         self.temperature = NORMAL_TEMPERATURE
         self.position = 0
         self.flow = VirtualSensors.get_flow()
-        self.speed = VirtualSensors.get_speed()
+        self.speed = VirtualSensors.get_speed(self.load)
 
-        # New Sensor
+        # Vibration Sensor
         self.vibration = NORMAL_VIBRATION
 
         # Statistics
@@ -38,7 +41,13 @@ class PneumaticCylinder:
     # -------------------------------------
     def update_sensors(self):
 
-        self.pressure = VirtualSensors.get_pressure()
+        # -------------------------------------
+        # Load Simulation (Generate new load first)
+        # -------------------------------------
+        self.load = random.uniform(MIN_LOAD, MAX_LOAD)
+
+        # Sensors affected by Load
+        self.pressure = VirtualSensors.get_pressure(self.load)
 
         self.temperature = VirtualSensors.get_temperature(
             self.temperature
@@ -46,7 +55,7 @@ class PneumaticCylinder:
 
         self.flow = VirtualSensors.get_flow()
 
-        self.speed = VirtualSensors.get_speed()
+        self.speed = VirtualSensors.get_speed(self.load)
 
         # Apply Fault (if any)
         FaultEngine.apply_fault(self)
@@ -54,7 +63,6 @@ class PneumaticCylinder:
         # -------------------------------------
         # Vibration Simulation
         # -------------------------------------
-
         if self.fault == HEALTHY:
             self.vibration = random.uniform(0.2, 0.6)
 
@@ -112,6 +120,7 @@ class PneumaticCylinder:
         print(f"Flow          : {self.flow:.2f} L/min")
         print(f"Speed         : {self.speed:.2f} mm/s")
         print(f"Vibration     : {self.vibration:.2f} mm/s")
+        print(f"Load          : {self.load:.2f} kg")
         print(f"Cycle Count   : {self.cycle_count}")
         print(f"Health Score  : {self.health}")
         print(f"Fault         : {self.fault}")
