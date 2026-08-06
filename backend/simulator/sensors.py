@@ -19,18 +19,38 @@ class VirtualSensors:
 
         pressure += random.uniform(-0.10, 0.10)
 
-        # Keep within cylinder limits
         pressure = max(MIN_PRESSURE, min(MAX_PRESSURE, pressure))
 
         return round(pressure, 2)
 
     @staticmethod
-    def get_temperature(current_temp):
+    def get_temperature(current_temp, fault=HEALTHY):
         """
-        Temperature slowly increases.
+        Simulates realistic operating temperature.
+        Temperature gradually approaches a target range
+        instead of increasing forever.
         """
 
-        current_temp += random.uniform(0.0, 0.2)
+        if fault == HEALTHY:
+            target = random.uniform(30, 35)
+
+        elif fault == AIR_LEAKAGE:
+            target = random.uniform(32, 40)
+
+        elif fault == PRESSURE_DROP:
+            target = random.uniform(30, 42)
+
+        elif fault == SEAL_WEAR:
+            target = random.uniform(38, 50)
+
+        elif fault == VALVE_STICKING:
+            target = random.uniform(45, 60)
+
+        else:
+            target = random.uniform(30, 35)
+
+        # Move gradually toward target
+        current_temp += (target - current_temp) * random.uniform(0.05, 0.15)
 
         return round(current_temp, 2)
 
@@ -52,7 +72,6 @@ class VirtualSensors:
 
         speed += random.uniform(-2, 2)
 
-        # Keep within cylinder limits
         speed = max(MIN_SPEED, min(MAX_SPEED, speed))
 
         return round(speed, 2)

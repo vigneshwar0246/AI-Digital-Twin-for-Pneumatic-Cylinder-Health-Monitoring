@@ -67,22 +67,27 @@ class PneumaticCylinder:
             2
         )
 
+        # Pressure depends on load
         self.pressure = VirtualSensors.get_pressure(
             self.load
         )
 
-        self.temperature = VirtualSensors.get_temperature(
-            self.temperature
-        )
-
+        # Flow
         self.flow = VirtualSensors.get_flow()
 
+        # Speed depends on load
         self.speed = VirtualSensors.get_speed(
             self.load
         )
 
-        # Apply faults
+        # Apply faults first
         FaultEngine.apply_fault(self)
+
+        # Temperature depends on current fault
+        self.temperature = VirtualSensors.get_temperature(
+            self.temperature,
+            self.fault
+        )
 
         # -------------------------------------
         # Vibration
@@ -170,6 +175,6 @@ class PneumaticCylinder:
         print(f"Vibration     : {self.vibration:.2f} mm/s")
         print(f"Load          : {self.load:.2f} kg")
         print(f"Cycle Count   : {self.cycle_count}")
-        print(f"Health Score  : {self.health}")
+        print(f"Health Score  : {self.health:.2f}")
         print(f"Fault         : {self.fault}")
         print("==================================")

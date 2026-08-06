@@ -14,77 +14,94 @@ class FaultEngine:
     def apply_fault(cylinder):
 
         # =====================================
-        # Healthy Region
+        # HEALTHY (0 - 500 Cycles)
         # =====================================
 
-        if cylinder.cycle_count < 20:
+        if cylinder.cycle_count <= 500:
+
             cylinder.fault = HEALTHY
-            return
+
+            cylinder.health = max(
+                95,
+                cylinder.health - random.uniform(0.00, 0.02)
+            )
 
         # =====================================
-        # Select Fault (only once)
+        # AIR LEAKAGE (501 - 1700 Cycles)
         # =====================================
 
-        if cylinder.fault == HEALTHY:
+        elif cylinder.cycle_count <= 1700:
 
-            fault_probability = random.random()
+            cylinder.fault = AIR_LEAKAGE
 
-            if fault_probability < 0.45:
-                cylinder.fault = AIR_LEAKAGE
-
-            elif fault_probability < 0.70:
-                cylinder.fault = SEAL_WEAR
-
-            elif fault_probability < 0.90:
-                cylinder.fault = VALVE_STICKING
-
-            else:
-                cylinder.fault = PRESSURE_DROP
-
-        # =====================================
-        # AIR LEAKAGE
-        # =====================================
-
-        if cylinder.fault == AIR_LEAKAGE:
-
-            cylinder.pressure -= random.uniform(0.3, 0.6)
-            cylinder.flow += random.uniform(0.5, 1.2)
-            cylinder.speed -= random.uniform(5, 10)
-            cylinder.health -= random.uniform(0.05, 0.15)
-
-        # =====================================
-        # SEAL WEAR
-        # =====================================
-
-        elif cylinder.fault == SEAL_WEAR:
-
-            cylinder.temperature += random.uniform(0.2, 0.5)
-            cylinder.speed -= random.uniform(8, 15)
-            cylinder.health -= random.uniform(0.10, 0.25)
-
-        # =====================================
-        # VALVE STICKING
-        # =====================================
-
-        elif cylinder.fault == VALVE_STICKING:
-
-            cylinder.speed -= random.uniform(15, 25)
             cylinder.pressure -= random.uniform(0.2, 0.5)
-            cylinder.health -= random.uniform(0.20, 0.40)
+
+            cylinder.flow += random.uniform(0.4, 1.0)
+
+            cylinder.speed -= random.uniform(3, 8)
+
+            cylinder.health = max(
+                75,
+                cylinder.health - random.uniform(0.02, 0.05)
+            )
 
         # =====================================
-        # PRESSURE DROP
+        # PRESSURE DROP (1701 - 3000 Cycles)
         # =====================================
 
-        elif cylinder.fault == PRESSURE_DROP:
+        elif cylinder.cycle_count <= 3000:
+
+            cylinder.fault = PRESSURE_DROP
 
             cylinder.pressure -= random.uniform(0.5, 0.9)
-            cylinder.speed -= random.uniform(3, 8)
-            cylinder.flow -= random.uniform(0.5, 1.0)
-            cylinder.health -= random.uniform(0.08, 0.20)
+
+            cylinder.flow -= random.uniform(0.3, 0.8)
+
+            cylinder.speed -= random.uniform(6, 12)
+
+            cylinder.health = max(
+                55,
+                cylinder.health - random.uniform(0.04, 0.08)
+            )
 
         # =====================================
-        # Keep values within limits
+        # SEAL WEAR (3001 - 4200 Cycles)
+        # =====================================
+
+        elif cylinder.cycle_count <= 4200:
+
+            cylinder.fault = SEAL_WEAR
+
+            cylinder.temperature += random.uniform(0.2, 0.6)
+
+            cylinder.speed -= random.uniform(8, 15)
+
+            cylinder.health = max(
+                30,
+                cylinder.health - random.uniform(0.05, 0.10)
+            )
+
+        # =====================================
+        # VALVE STICKING (4201+ Cycles)
+        # =====================================
+
+        else:
+
+            cylinder.fault = VALVE_STICKING
+
+            cylinder.speed -= random.uniform(12, 20)
+
+            cylinder.pressure -= random.uniform(0.3, 0.7)
+
+            cylinder.flow -= random.uniform(0.2, 0.6)
+
+            cylinder.health = max(
+                0,
+                cylinder.health - random.uniform(0.08, 0.15)
+            )
+
+        # =====================================
+        # Sensor Limits
         # =====================================
 
         cylinder.pressure = max(
@@ -97,9 +114,4 @@ class FaultEngine:
             min(MAX_SPEED, cylinder.speed)
         )
 
-        cylinder.flow = max(8.0, min(12.0, cylinder.flow))
-
-        cylinder.health = max(
-            0,
-            round(cylinder.health, 2)
-        )
+        cylinder.health = round(cylinder.health, 2)
