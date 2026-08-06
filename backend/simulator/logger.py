@@ -1,57 +1,69 @@
 """
-Dataset Logger + Dataset Generator
+Dataset Logger
+Saves every simulation step into a CSV file.
 """
 
 import csv
 import os
 
-OUTPUT_FILE = "datasets/simulated/pneumatic_cylinder_dataset.csv"
-
 
 class DatasetLogger:
-    """
-    Logs one row of sensor data into the CSV file.
-    """
 
     def __init__(self):
 
-        os.makedirs("datasets/simulated", exist_ok=True)
+        # Dataset folder
+        self.dataset_folder = "datasets/simulated"
 
-        self.file = open(OUTPUT_FILE, "w", newline="")
+        # Dataset file
+        self.dataset_file = os.path.join(
+            self.dataset_folder,
+            "pneumatic_cylinder_dataset.csv"
+        )
 
-        self.writer = csv.writer(self.file)
+        # Create folder if it doesn't exist
+        os.makedirs(self.dataset_folder, exist_ok=True)
 
-        self.writer.writerow([
-            "Time",
-            "Pressure",
-            "Temperature",
-            "Position",
-            "Flow",
-            "Speed",
-            "CycleCount",
-            "Health",
-            "Fault",
-            "Vibration",
-            "Load"
-        ])
+        # Create CSV with header only if it doesn't exist
+        if not os.path.exists(self.dataset_file):
+
+            with open(self.dataset_file, "w", newline="") as file:
+
+                writer = csv.writer(file)
+
+                writer.writerow([
+                    "Time",
+                    "Pressure",
+                    "Temperature",
+                    "Position",
+                    "Flow",
+                    "Speed",
+                    "CycleCount",
+                    "Health",
+                    "Fault",
+                    "Vibration",
+                    "Load"
+                ])
 
     def log(self, time_step, cylinder):
 
-        self.writer.writerow([
-            time_step,
-            round(cylinder.pressure, 2),
-            round(cylinder.temperature, 2),
-            cylinder.position,
-            round(cylinder.flow, 2),
-            round(cylinder.speed, 2),
-            cylinder.cycle_count,
-            cylinder.health,
-            cylinder.fault,
-            round(cylinder.vibration, 2),
-            round(cylinder.load, 2)
-        ])
+        with open(self.dataset_file, "a", newline="") as file:
 
-        self.file.flush()
+            writer = csv.writer(file)
 
-    def close(self):
-        self.file.close()
+            writer.writerow([
+                time_step,
+                round(cylinder.pressure, 2),
+                round(cylinder.temperature, 2),
+                cylinder.position,
+                round(cylinder.flow, 2),
+                round(cylinder.speed, 2),
+                cylinder.cycle_count,
+                round(cylinder.health, 2),
+                cylinder.fault,
+                round(cylinder.vibration, 2),
+                round(cylinder.load, 2)
+            ])
+
+            # Force write to disk immediately
+            file.flush()
+            os.fsync(file.fileno())

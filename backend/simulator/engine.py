@@ -1,15 +1,35 @@
 """
 Digital Twin Simulation Engine
-Generates exactly 10,000 synthetic sensor readings
+Live Simulation + Continuous Dataset Logging
 """
 
 import time
+import os
+import pandas as pd
 
 from backend.simulator.cylinder import PneumaticCylinder
 from backend.simulator.logger import DatasetLogger
 
 
-TOTAL_ROWS = 10000
+OUTPUT_FILE = "datasets/simulated/pneumatic_cylinder_dataset.csv"
+
+
+def get_last_time_step():
+
+    if not os.path.exists(OUTPUT_FILE):
+        return 0
+
+    try:
+
+        df = pd.read_csv(OUTPUT_FILE)
+
+        if len(df) == 0:
+            return 0
+
+        return int(df["Time"].iloc[-1])
+
+    except Exception:
+        return 0
 
 
 def run_simulation():
@@ -18,41 +38,45 @@ def run_simulation():
 
     logger = DatasetLogger()
 
-    time_step = 0
+    time_step = get_last_time_step()
 
-    print("\nGenerating Dataset...\n")
+    print("\nStarting Digital Twin Simulation...\n")
 
-    while time_step < TOTAL_ROWS:
+    try:
 
-        # -------------------------
-        # Move Forward
-        # -------------------------
-        while cylinder.position < 100 and time_step < TOTAL_ROWS:
+        while True:
 
-            cylinder.move_forward()
+            while cylinder.position < 100:
 
-            time_step += 1
+                cylinder.move_forward()
 
-            logger.log(time_step, cylinder)
+                cylinder.display_status()
 
-        # -------------------------
-        # Move Backward
-        # -------------------------
-        while cylinder.position > 0 and time_step < TOTAL_ROWS:
+                time_step += 1
 
-            cylinder.move_backward()
+                logger.log(time_step, cylinder)
 
-            time_step += 1
+                time.sleep(1)
 
-            logger.log(time_step, cylinder)
+            while cylinder.position > 0:
 
-    logger.close()
+                cylinder.move_backward()
 
-    print("\n===================================")
-    print("Dataset Generated Successfully!")
-    print(f"Rows Generated : {time_step}")
-    print("Saved To : datasets/simulated/pneumatic_cylinder_dataset.csv")
-    print("===================================")
+                cylinder.display_status()
+
+                time_step += 1
+
+                logger.log(time_step, cylinder)
+
+                time.sleep(1)
+
+    except KeyboardInterrupt:
+
+        print("\n\nSimulation Stopped by User.")
+
+        print(f"\nDataset updated successfully.")
+        print(f"Total Rows : {time_step}")
+        print(f"Location : {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":

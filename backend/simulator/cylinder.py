@@ -16,38 +16,60 @@ class PneumaticCylinder:
 
     def __init__(self):
 
-        # Load Sensor (Initialize first)
+        # -------------------------------------
+        # Load Sensor
+        # -------------------------------------
+
         self.load = NORMAL_LOAD
 
+        # -------------------------------------
         # Initial Sensor Values
+        # -------------------------------------
+
         self.pressure = VirtualSensors.get_pressure(self.load)
+
         self.temperature = NORMAL_TEMPERATURE
+
         self.position = 0
+
         self.flow = VirtualSensors.get_flow()
+
         self.speed = VirtualSensors.get_speed(self.load)
 
-        # Vibration Sensor
         self.vibration = NORMAL_VIBRATION
 
+        # -------------------------------------
         # Statistics
+        # -------------------------------------
+
         self.cycle_count = 0
+
         self.health = MAX_HEALTH
 
+        # -------------------------------------
         # Current Fault
+        # -------------------------------------
+
         self.fault = HEALTHY
 
     # -------------------------------------
     # Update Virtual Sensors
     # -------------------------------------
+
     def update_sensors(self):
 
-        # -------------------------------------
-        # Load Simulation (Generate new load first)
-        # -------------------------------------
-        self.load = random.uniform(MIN_LOAD, MAX_LOAD)
+        # Random load for every cycle
+        self.load = round(
+            random.uniform(
+                MIN_LOAD,
+                MAX_LOAD
+            ),
+            2
+        )
 
-        # Sensors affected by Load
-        self.pressure = VirtualSensors.get_pressure(self.load)
+        self.pressure = VirtualSensors.get_pressure(
+            self.load
+        )
 
         self.temperature = VirtualSensors.get_temperature(
             self.temperature
@@ -55,32 +77,56 @@ class PneumaticCylinder:
 
         self.flow = VirtualSensors.get_flow()
 
-        self.speed = VirtualSensors.get_speed(self.load)
+        self.speed = VirtualSensors.get_speed(
+            self.load
+        )
 
-        # Apply Fault (if any)
+        # Apply faults
         FaultEngine.apply_fault(self)
 
         # -------------------------------------
-        # Vibration Simulation
+        # Vibration
         # -------------------------------------
+
         if self.fault == HEALTHY:
-            self.vibration = random.uniform(0.2, 0.6)
+
+            self.vibration = round(
+                random.uniform(0.2, 0.6),
+                2
+            )
 
         elif self.fault == AIR_LEAKAGE:
-            self.vibration = random.uniform(0.8, 1.2)
+
+            self.vibration = round(
+                random.uniform(0.8, 1.2),
+                2
+            )
 
         elif self.fault == SEAL_WEAR:
-            self.vibration = random.uniform(1.5, 2.5)
+
+            self.vibration = round(
+                random.uniform(1.5, 2.5),
+                2
+            )
 
         elif self.fault == VALVE_STICKING:
-            self.vibration = random.uniform(2.5, 4.0)
+
+            self.vibration = round(
+                random.uniform(2.5, 4.0),
+                2
+            )
 
         elif self.fault == PRESSURE_DROP:
-            self.vibration = random.uniform(1.0, 2.0)
+
+            self.vibration = round(
+                random.uniform(1.0, 2.0),
+                2
+            )
 
     # -------------------------------------
     # Move Forward
     # -------------------------------------
+
     def move_forward(self):
 
         if self.position < STROKE_LENGTH:
@@ -97,6 +143,7 @@ class PneumaticCylinder:
     # -------------------------------------
     # Move Backward
     # -------------------------------------
+
     def move_backward(self):
 
         if self.position > 0:
@@ -111,6 +158,7 @@ class PneumaticCylinder:
     # -------------------------------------
     # Display Status
     # -------------------------------------
+
     def display_status(self):
 
         print("\n========== DIGITAL TWIN ==========")
