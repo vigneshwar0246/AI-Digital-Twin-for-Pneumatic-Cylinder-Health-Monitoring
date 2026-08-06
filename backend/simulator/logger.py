@@ -1,58 +1,57 @@
 """
-Dataset Logger
-Saves Digital Twin sensor data into CSV
+Dataset Logger + Dataset Generator
 """
 
 import csv
 import os
 
+OUTPUT_FILE = "datasets/simulated/pneumatic_cylinder_dataset.csv"
+
 
 class DatasetLogger:
+    """
+    Logs one row of sensor data into the CSV file.
+    """
 
     def __init__(self):
 
-        self.file_path = "datasets/simulated/pneumatic_dataset.csv"
-
         os.makedirs("datasets/simulated", exist_ok=True)
 
-        # Create CSV with Header
-        if not os.path.exists(self.file_path):
+        self.file = open(OUTPUT_FILE, "w", newline="")
 
-            with open(self.file_path, "w", newline="") as file:
+        self.writer = csv.writer(self.file)
 
-                writer = csv.writer(file)
+        self.writer.writerow([
+            "Time",
+            "Pressure",
+            "Temperature",
+            "Position",
+            "Flow",
+            "Speed",
+            "CycleCount",
+            "Health",
+            "Fault",
+            "Vibration",
+            "Load"
+        ])
 
-                writer.writerow([
-                    "Time",
-                    "Pressure",
-                    "Temperature",
-                    "Position",
-                    "Flow",
-                    "Speed",
-                    "CycleCount",
-                    "Health",
-                    "Fault",
-                    "Vibration"
-                ])
-
-    # ---------------------------------------
-    # Save one sensor reading
-    # ---------------------------------------
     def log(self, time_step, cylinder):
 
-        with open(self.file_path, "a", newline="") as file:
+        self.writer.writerow([
+            time_step,
+            round(cylinder.pressure, 2),
+            round(cylinder.temperature, 2),
+            cylinder.position,
+            round(cylinder.flow, 2),
+            round(cylinder.speed, 2),
+            cylinder.cycle_count,
+            cylinder.health,
+            cylinder.fault,
+            round(cylinder.vibration, 2),
+            round(cylinder.load, 2)
+        ])
 
-            writer = csv.writer(file)
+        self.file.flush()
 
-            writer.writerow([
-                time_step,
-                round(cylinder.pressure, 2),
-                round(cylinder.temperature, 2),
-                cylinder.position,
-                round(cylinder.flow, 2),
-                round(cylinder.speed, 2),
-                cylinder.cycle_count,
-                cylinder.health,
-                cylinder.fault,
-                round(cylinder.vibration, 2)
-            ])
+    def close(self):
+        self.file.close()
