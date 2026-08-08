@@ -253,3 +253,6 @@ This project is developed for educational and research purposes.
 - Docker
 - MQTT
 - Open Source Community
+
+python -m backend.simulator.engine - run live simulation
+
