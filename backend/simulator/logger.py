@@ -8,49 +8,37 @@ import os
 
 
 class DatasetLogger:
+    """Persist Digital Twin sensor/state data as CSV."""
 
-    def __init__(self):
+    HEADER = [
+        "Time",
+        "Pressure",
+        "Temperature",
+        "Position",
+        "Flow",
+        "Speed",
+        "CycleCount",
+        "Health",
+        "Fault",
+        "Vibration",
+        "Load",
+    ]
 
-        # Dataset folder
-        self.dataset_folder = "datasets/simulated"
+    def __init__(self, dataset_file="datasets/simulated/pneumatic_cylinder_dataset.csv", reset=False):
+        self.dataset_file = dataset_file
+        os.makedirs(os.path.dirname(self.dataset_file), exist_ok=True)
 
-        # Dataset file
-        self.dataset_file = os.path.join(
-            self.dataset_folder,
-            "pneumatic_cylinder_dataset.csv"
-        )
+        if reset or not os.path.exists(self.dataset_file):
+            self._write_header()
 
-        # Create folder if it doesn't exist
-        os.makedirs(self.dataset_folder, exist_ok=True)
-
-        # Create CSV with header only if it doesn't exist
-        if not os.path.exists(self.dataset_file):
-
-            with open(self.dataset_file, "w", newline="") as file:
-
-                writer = csv.writer(file)
-
-                writer.writerow([
-                    "Time",
-                    "Pressure",
-                    "Temperature",
-                    "Position",
-                    "Flow",
-                    "Speed",
-                    "CycleCount",
-                    "Health",
-                    "Fault",
-                    "Vibration",
-                    "Load"
-                ])
+    def _write_header(self):
+        with open(self.dataset_file, "w", newline="", encoding="utf-8") as file:
+            csv.writer(file).writerow(self.HEADER)
 
     def log(self, time_step, cylinder):
-
-        with open(self.dataset_file, "a", newline="") as file:
-
-            writer = csv.writer(file)
-
-            writer.writerow([
+        """Append one simulation observation."""
+        with open(self.dataset_file, "a", newline="", encoding="utf-8") as file:
+            csv.writer(file).writerow([
                 time_step,
                 round(cylinder.pressure, 2),
                 round(cylinder.temperature, 2),
@@ -61,9 +49,5 @@ class DatasetLogger:
                 round(cylinder.health, 2),
                 cylinder.fault,
                 round(cylinder.vibration, 2),
-                round(cylinder.load, 2)
+                round(cylinder.load, 2),
             ])
-
-            # Force write to disk immediately
-            file.flush()
-            os.fsync(file.fileno())
