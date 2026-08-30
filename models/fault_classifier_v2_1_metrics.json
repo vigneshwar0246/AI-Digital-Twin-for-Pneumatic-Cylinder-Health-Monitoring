@@ -1,0 +1,200 @@
+{
+    "dataset_version": "V2.1",
+    "split_method": "40 complete training runs and 10 complete unseen testing runs",
+    "accuracy": 0.95775,
+    "balanced_accuracy": 0.9544523229810205,
+    "macro_f1": 0.954178370567708,
+    "class_names": [
+        "Air Leakage",
+        "Healthy",
+        "Pressure Drop",
+        "Seal Wear",
+        "Valve Sticking"
+    ],
+    "confusion_matrix": [
+        [
+            601,
+            16,
+            18,
+            0,
+            4
+        ],
+        [
+            22,
+            1380,
+            12,
+            3,
+            4
+        ],
+        [
+            6,
+            9,
+            629,
+            0,
+            0
+        ],
+        [
+            12,
+            1,
+            0,
+            628,
+            17
+        ],
+        [
+            31,
+            10,
+            4,
+            0,
+            593
+        ]
+    ],
+    "classification_report": {
+        "Air Leakage": {
+            "precision": 0.8943452380952381,
+            "recall": 0.9405320813771518,
+            "f1-score": 0.9168573607932876,
+            "support": 639.0
+        },
+        "Healthy": {
+            "precision": 0.9745762711864406,
+            "recall": 0.9711470795214637,
+            "f1-score": 0.9728586535072259,
+            "support": 1421.0
+        },
+        "Pressure Drop": {
+            "precision": 0.9487179487179487,
+            "recall": 0.9767080745341615,
+            "f1-score": 0.9625095638867636,
+            "support": 644.0
+        },
+        "Seal Wear": {
+            "precision": 0.9952456418383518,
+            "recall": 0.9544072948328267,
+            "f1-score": 0.9743987587276959,
+            "support": 658.0
+        },
+        "Valve Sticking": {
+            "precision": 0.959546925566343,
+            "recall": 0.9294670846394985,
+            "f1-score": 0.9442675159235668,
+            "support": 638.0
+        },
+        "accuracy": 0.95775,
+        "macro avg": {
+            "precision": 0.9544864050808645,
+            "recall": 0.9544523229810205,
+            "f1-score": 0.954178370567708,
+            "support": 4000.0
+        },
+        "weighted avg": {
+            "precision": 0.9585991045785277,
+            "recall": 0.95775,
+            "f1-score": 0.9579393044314535,
+            "support": 4000.0
+        }
+    },
+    "features": [
+        "Pressure",
+        "Temperature",
+        "Position",
+        "Flow",
+        "Speed",
+        "Vibration",
+        "Load",
+        "PressureResidual",
+        "SpeedResidual",
+        "TemperatureResidual",
+        "VibrationResidual",
+        "FlowDeviation",
+        "PressureChange",
+        "FlowChange",
+        "SpeedChange",
+        "VibrationChange",
+        "PressureStd10",
+        "FlowStd10",
+        "SpeedStd10",
+        "VibrationStd10",
+        "TemperatureTrend10",
+        "PositionDwell",
+        "DwellRate10"
+    ],
+    "train_run_ids": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        15,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        29,
+        31,
+        32,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        44,
+        45,
+        46,
+        47,
+        49,
+        50
+    ],
+    "test_run_ids": [
+        4,
+        11,
+        14,
+        20,
+        24,
+        30,
+        33,
+        42,
+        43,
+        48
+    ],
+    "feature_importance": {
+        "TemperatureResidual": 0.1877659844965835,
+        "PressureResidual": 0.12205640332387867,
+        "VibrationStd10": 0.09266300087213755,
+        "Temperature": 0.08018004335764523,
+        "VibrationResidual": 0.07699933142142482,
+        "Flow": 0.0715042442829016,
+        "FlowDeviation": 0.07016152529106212,
+        "SpeedStd10": 0.05889749594597339,
+        "DwellRate10": 0.05025247290363844,
+        "Vibration": 0.044745313813350764,
+        "PressureStd10": 0.04308880842868428,
+        "Pressure": 0.02152373906862964,
+        "SpeedResidual": 0.020103576601861902,
+        "FlowStd10": 0.017682464603473846,
+        "TemperatureTrend10": 0.009724564233130777,
+        "Speed": 0.00859842370668261,
+        "Load": 0.007664710643503733,
+        "VibrationChange": 0.004987850872912422,
+        "PressureChange": 0.0037444118422191217,
+        "FlowChange": 0.0027978462298562526,
+        "SpeedChange": 0.0022042721129432257,
+        "PositionDwell": 0.0013485008407655736,
+        "Position": 0.0013050151067406713
+    }
+}
