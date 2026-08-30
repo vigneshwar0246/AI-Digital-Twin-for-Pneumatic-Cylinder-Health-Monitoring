@@ -1,8 +1,5 @@
 """
-Five-fold run-level evaluation for Dataset V2.
-
-Every fold tests on five complete unseen runs:
-one run from each planned operating condition.
+Five-fold unseen-run evaluation for Dataset V2.1.
 """
 
 import json
@@ -10,7 +7,6 @@ from pathlib import Path
 
 import numpy as np
 
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     accuracy_score,
     balanced_accuracy_score,
@@ -19,36 +15,32 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.model_selection import StratifiedKFold
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import (
+    LabelEncoder,
+    StandardScaler,
+)
 
-from backend.ai.preprocessing import (
+from backend.ai.feature_engineering_v2_1 import (
     FEATURE_COLUMNS,
+)
+from backend.ai.preprocessing_v2_1 import (
     create_run_table,
     load_data,
 )
+from backend.ai.train_v2_1 import create_model
 
 
 OUTPUT_PATH = Path(
-    "models/fault_classifier_v2_cv_metrics.json"
+    "models/"
+    "fault_classifier_v2_1_cv_metrics.json"
 )
 
 
-def create_model():
-    return RandomForestClassifier(
-        n_estimators=300,
-        max_depth=14,
-        min_samples_leaf=3,
-        max_features="sqrt",
-        class_weight="balanced_subsample",
-        random_state=42,
-        n_jobs=-1,
-    )
-
-
 def evaluate_model():
-    print("=" * 70)
-    print("DATASET V2 FIVE-FOLD UNSEEN-RUN EVALUATION")
-    print("=" * 70)
+
+    print("=" * 72)
+    print("DATASET V2.1 FIVE-FOLD UNSEEN-RUN EVALUATION")
+    print("=" * 72)
 
     df = load_data()
     run_table = create_run_table(df)
@@ -57,7 +49,9 @@ def evaluate_model():
     label_encoder.fit(df["Fault"])
 
     class_names = label_encoder.classes_
-    class_numbers = np.arange(len(class_names))
+    class_numbers = np.arange(
+        len(class_names)
+    )
 
     splitter = StratifiedKFold(
         n_splits=5,
@@ -68,8 +62,9 @@ def evaluate_model():
     fold_results = []
     all_true = []
     all_predictions = []
+    importance_values = []
 
-    split_data = splitter.split(
+    splits = splitter.split(
         run_table["RunID"],
         run_table["RunFault"],
     )
@@ -77,7 +72,7 @@ def evaluate_model():
     for fold_number, (
         train_indices,
         test_indices,
-    ) in enumerate(split_data, start=1):
+    ) in enumerate(splits, start=1):
 
         train_runs = run_table.iloc[
             train_indices
@@ -140,9 +135,11 @@ def evaluate_model():
             predictions,
         )
 
-        balanced_accuracy = balanced_accuracy_score(
-            y_test,
-            predictions,
+        balanced_accuracy = (
+            balanced_accuracy_score(
+                y_test,
+                predictions,
+            )
         )
 
         macro_f1 = f1_score(
@@ -157,6 +154,10 @@ def evaluate_model():
             labels=class_numbers,
             average=None,
             zero_division=0,
+        )
+
+        importance_values.append(
+            model.feature_importances_
         )
 
         all_true.extend(y_test.tolist())
@@ -189,17 +190,19 @@ def evaluate_model():
             "class_recall": recall_dictionary,
         })
 
-        print("\n" + "-" * 70)
+        print("\n" + "-" * 72)
         print(f"FOLD {fold_number}")
-        print("-" * 70)
+        print("-" * 72)
 
         print("Testing runs:")
         print(
             test_runs[
                 ["RunID", "RunFault"]
-            ].sort_values("RunFault").to_string(
-                index=False
+            ]
+            .sort_values(
+                ["RunFault", "RunID"]
             )
+            .to_string(index=False)
         )
 
         print(
@@ -252,18 +255,35 @@ def evaluate_model():
     average_class_recall = {}
 
     for class_name in class_names:
-        values = [
+
+        recalls = [
             result["class_recall"][class_name]
             for result in fold_results
         ]
 
         average_class_recall[class_name] = float(
-            np.mean(values)
+            np.mean(recalls)
         )
 
-    print("\n" + "=" * 70)
-    print("FIVE-FOLD SUMMARY")
-    print("=" * 70)
+    mean_importance = np.mean(
+        np.array(importance_values),
+        axis=0,
+    )
+
+    importance_dictionary = dict(
+        sorted(
+            zip(
+                FEATURE_COLUMNS,
+                mean_importance.tolist(),
+            ),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    )
+
+    print("\n" + "=" * 72)
+    print("V2.1 FIVE-FOLD SUMMARY")
+    print("=" * 72)
 
     print(
         f"Accuracy          : "
@@ -296,8 +316,18 @@ def evaluate_model():
     print("\nAggregate Confusion Matrix:")
     print(aggregate_matrix)
 
+    print("\nMean Feature Importance:")
+
+    for feature, importance in (
+        importance_dictionary.items()
+    ):
+        print(
+            f"{feature:<24}: "
+            f"{importance:.4f}"
+        )
+
     output = {
-        "dataset_version": "V2",
+        "dataset_version": "V2.1",
         "evaluation": (
             "Five-fold stratified evaluation "
             "using complete unseen runs"
@@ -327,6 +357,9 @@ def evaluate_model():
         "aggregate_confusion_matrix": (
             aggregate_matrix.tolist()
         ),
+        "mean_feature_importance": (
+            importance_dictionary
+        ),
         "folds": fold_results,
     }
 
@@ -346,7 +379,7 @@ def evaluate_model():
             indent=4,
         )
 
-    print("\nCross-validation results saved to:")
+    print("\nResults saved to:")
     print(OUTPUT_PATH)
 
 

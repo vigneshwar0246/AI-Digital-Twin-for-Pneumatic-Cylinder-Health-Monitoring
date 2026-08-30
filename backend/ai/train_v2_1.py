@@ -1,8 +1,8 @@
 """
-Dataset V2 Random Forest fault classifier.
+Random Forest baseline for Dataset V2.1.
 
-Trains only on physical sensor measurements and evaluates
-using five completely unseen simulation runs.
+Uses the same model configuration as V2 so improvements
+come from better simulation and features—not hidden tuning.
 """
 
 import json
@@ -20,26 +20,31 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from backend.ai.preprocessing import (
+from backend.ai.preprocessing_v2_1 import (
     load_data,
     preprocess_data,
 )
 
 
 MODEL_DIRECTORY = Path("models")
-MODEL_PATH = MODEL_DIRECTORY / "fault_classifier_v2.joblib"
-METRICS_PATH = MODEL_DIRECTORY / "fault_classifier_v2_metrics.json"
+
+MODEL_PATH = (
+    MODEL_DIRECTORY
+    / "fault_classifier_v2_1.joblib"
+)
+
+METRICS_PATH = (
+    MODEL_DIRECTORY
+    / "fault_classifier_v2_1_metrics.json"
+)
 
 
-def train_model():
-    print("=" * 60)
-    print("DATASET V2 FAULT CLASSIFICATION")
-    print("=" * 60)
+def create_model():
+    """
+    Keep the V2 configuration for a fair comparison.
+    """
 
-    dataset = load_data()
-    prepared = preprocess_data(dataset)
-
-    model = RandomForestClassifier(
+    return RandomForestClassifier(
         n_estimators=300,
         max_depth=14,
         min_samples_leaf=3,
@@ -49,7 +54,20 @@ def train_model():
         n_jobs=-1,
     )
 
-    print("\nTraining Random Forest...")
+
+def train_model():
+
+    print("=" * 70)
+    print("DATASET V2.1 FAULT CLASSIFICATION")
+    print("=" * 70)
+
+    dataset = load_data()
+    prepared = preprocess_data(dataset)
+
+    model = create_model()
+
+    print("\nTraining V2.1 Random Forest...")
+
     model.fit(
         prepared["X_train"],
         prepared["y_train"],
@@ -75,9 +93,14 @@ def train_model():
         average="macro",
     )
 
-    label_encoder = prepared["label_encoder"]
+    label_encoder = prepared[
+        "label_encoder"
+    ]
+
     class_names = label_encoder.classes_
-    class_numbers = np.arange(len(class_names))
+    class_numbers = np.arange(
+        len(class_names)
+    )
 
     report_text = classification_report(
         prepared["y_test"],
@@ -102,16 +125,24 @@ def train_model():
         labels=class_numbers,
     )
 
-    print("\n" + "=" * 60)
-    print("UNSEEN-RUN TEST RESULTS")
-    print("=" * 60)
+    print("\n" + "=" * 70)
+    print("V2.1 UNSEEN-RUN RESULTS")
+    print("=" * 70)
 
-    print(f"Accuracy          : {accuracy * 100:.2f}%")
+    print(
+        f"Accuracy          : "
+        f"{accuracy * 100:.2f}%"
+    )
+
     print(
         f"Balanced Accuracy : "
         f"{balanced_accuracy * 100:.2f}%"
     )
-    print(f"Macro F1 Score    : {macro_f1:.4f}")
+
+    print(
+        f"Macro F1          : "
+        f"{macro_f1:.4f}"
+    )
 
     print("\nClassification Report:")
     print(report_text)
@@ -119,9 +150,7 @@ def train_model():
     print("Confusion Matrix:")
     print(matrix)
 
-    print("\nFeature Importance:")
-
-    importance_values = sorted(
+    feature_importance = sorted(
         zip(
             prepared["features"],
             model.feature_importances_,
@@ -130,8 +159,15 @@ def train_model():
         reverse=True,
     )
 
-    for feature, importance in importance_values:
-        print(f"{feature:<15}: {importance:.4f}")
+    print("\nFeature Importance:")
+
+    for feature, importance in (
+        feature_importance
+    ):
+        print(
+            f"{feature:<24}: "
+            f"{importance:.4f}"
+        )
 
     MODEL_DIRECTORY.mkdir(
         parents=True,
@@ -143,10 +179,15 @@ def train_model():
         "label_encoder": label_encoder,
         "scaler": prepared["scaler"],
         "features": prepared["features"],
-        "train_run_ids": prepared["train_run_ids"],
-        "test_run_ids": prepared["test_run_ids"],
-        "dataset_version": "V2",
+        "train_run_ids": (
+            prepared["train_run_ids"]
+        ),
+        "test_run_ids": (
+            prepared["test_run_ids"]
+        ),
+        "dataset_version": "V2.1",
         "rows_per_run": 400,
+        "rolling_window": 10,
     }
 
     joblib.dump(
@@ -155,20 +196,31 @@ def train_model():
     )
 
     metrics = {
-        "dataset_version": "V2",
+        "dataset_version": "V2.1",
         "split_method": (
-            "20 complete training runs and "
-            "5 complete unseen testing runs"
+            "40 complete training runs and "
+            "10 complete unseen testing runs"
         ),
         "accuracy": float(accuracy),
-        "balanced_accuracy": float(balanced_accuracy),
+        "balanced_accuracy": float(
+            balanced_accuracy
+        ),
         "macro_f1": float(macro_f1),
         "class_names": class_names.tolist(),
         "confusion_matrix": matrix.tolist(),
         "classification_report": report_data,
         "features": prepared["features"],
-        "train_run_ids": prepared["train_run_ids"],
-        "test_run_ids": prepared["test_run_ids"],
+        "train_run_ids": (
+            prepared["train_run_ids"]
+        ),
+        "test_run_ids": (
+            prepared["test_run_ids"]
+        ),
+        "feature_importance": {
+            feature: float(importance)
+            for feature, importance
+            in feature_importance
+        },
     }
 
     with open(
@@ -187,8 +239,6 @@ def train_model():
 
     print("\nMetrics saved to:")
     print(METRICS_PATH)
-
-    return model_bundle, metrics
 
 
 if __name__ == "__main__":

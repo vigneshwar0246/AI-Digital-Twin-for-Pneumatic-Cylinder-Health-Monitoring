@@ -1,0 +1,651 @@
+{
+    "dataset_version": "V2.1",
+    "evaluation": "Five-fold stratified evaluation using complete unseen runs",
+    "features": [
+        "Pressure",
+        "Temperature",
+        "Position",
+        "Flow",
+        "Speed",
+        "Vibration",
+        "Load",
+        "PressureResidual",
+        "SpeedResidual",
+        "TemperatureResidual",
+        "VibrationResidual",
+        "FlowDeviation",
+        "PressureChange",
+        "FlowChange",
+        "SpeedChange",
+        "VibrationChange",
+        "PressureStd10",
+        "FlowStd10",
+        "SpeedStd10",
+        "VibrationStd10",
+        "TemperatureTrend10",
+        "PositionDwell",
+        "DwellRate10"
+    ],
+    "accuracy_mean": 0.9557,
+    "accuracy_std": 0.014404339623877249,
+    "balanced_accuracy_mean": 0.9490033704389532,
+    "balanced_accuracy_std": 0.020020660117601122,
+    "macro_f1_mean": 0.9502621158001137,
+    "macro_f1_std": 0.01816101772536712,
+    "average_class_recall": {
+        "Air Leakage": 0.9004352878996956,
+        "Healthy": 0.9800423124923207,
+        "Pressure Drop": 0.9564983627798151,
+        "Seal Wear": 0.9792038719658198,
+        "Valve Sticking": 0.9288370170571149
+    },
+    "aggregate_confusion_matrix": [
+        [
+            2901,
+            131,
+            131,
+            1,
+            52
+        ],
+        [
+            83,
+            6974,
+            42,
+            5,
+            12
+        ],
+        [
+            90,
+            45,
+            3065,
+            0,
+            4
+        ],
+        [
+            31,
+            5,
+            0,
+            3259,
+            33
+        ],
+        [
+            142,
+            45,
+            9,
+            25,
+            2915
+        ]
+    ],
+    "mean_feature_importance": {
+        "TemperatureResidual": 0.1928040724776274,
+        "PressureResidual": 0.12069314233302668,
+        "VibrationStd10": 0.08673285600639137,
+        "VibrationResidual": 0.07801973809894006,
+        "FlowDeviation": 0.07624437197716577,
+        "Temperature": 0.07576492627886208,
+        "Flow": 0.0713347814875434,
+        "SpeedStd10": 0.06087785484840911,
+        "DwellRate10": 0.05162129297474362,
+        "PressureStd10": 0.04750526743941341,
+        "Vibration": 0.0374525014196506,
+        "Pressure": 0.02034568512481262,
+        "SpeedResidual": 0.02020522816818939,
+        "FlowStd10": 0.018925847127538562,
+        "Speed": 0.009204229402955233,
+        "TemperatureTrend10": 0.008355085995686939,
+        "Load": 0.008023128021643433,
+        "VibrationChange": 0.004711664959127009,
+        "PressureChange": 0.0036911781419906296,
+        "FlowChange": 0.002644573295926716,
+        "SpeedChange": 0.0021780626774481043,
+        "PositionDwell": 0.0013852021065743436,
+        "Position": 0.0012793096363335483
+    },
+    "folds": [
+        {
+            "fold": 1,
+            "train_run_ids": [
+                1,
+                5,
+                7,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                17,
+                18,
+                19,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                48,
+                49,
+                50
+            ],
+            "test_run_ids": [
+                2,
+                3,
+                4,
+                6,
+                8,
+                9,
+                16,
+                20,
+                32,
+                47
+            ],
+            "test_run_conditions": [
+                {
+                    "RunID": 2,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 3,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 4,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 6,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 8,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 9,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 16,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 20,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 32,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 47,
+                    "RunFault": "Healthy"
+                }
+            ],
+            "accuracy": 0.9555,
+            "balanced_accuracy": 0.9484445077964532,
+            "macro_f1": 0.9498823442334222,
+            "class_recall": {
+                "Air Leakage": 0.9515885022692889,
+                "Healthy": 0.9789621318373072,
+                "Pressure Drop": 0.9615975422427036,
+                "Seal Wear": 0.9893778452200304,
+                "Valve Sticking": 0.8606965174129353
+            }
+        },
+        {
+            "fold": 2,
+            "train_run_ids": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                16,
+                17,
+                18,
+                20,
+                21,
+                22,
+                23,
+                25,
+                27,
+                28,
+                30,
+                31,
+                32,
+                34,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                44,
+                46,
+                47,
+                48,
+                49,
+                50
+            ],
+            "test_run_ids": [
+                15,
+                19,
+                24,
+                26,
+                29,
+                33,
+                35,
+                42,
+                43,
+                45
+            ],
+            "test_run_conditions": [
+                {
+                    "RunID": 15,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 19,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 24,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 26,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 29,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 33,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 35,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 42,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 43,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 45,
+                    "RunFault": "Valve Sticking"
+                }
+            ],
+            "accuracy": 0.95825,
+            "balanced_accuracy": 0.9526206093444852,
+            "macro_f1": 0.9539497523777621,
+            "class_recall": {
+                "Air Leakage": 0.9342723004694836,
+                "Healthy": 0.9799168975069252,
+                "Pressure Drop": 0.9218500797448166,
+                "Seal Wear": 0.9650986342943855,
+                "Valve Sticking": 0.9619651347068146
+            }
+        },
+        {
+            "fold": 3,
+            "train_run_ids": [
+                1,
+                2,
+                3,
+                4,
+                6,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                31,
+                32,
+                33,
+                35,
+                36,
+                37,
+                38,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                47,
+                48,
+                49
+            ],
+            "test_run_ids": [
+                5,
+                10,
+                11,
+                21,
+                22,
+                30,
+                34,
+                39,
+                46,
+                50
+            ],
+            "test_run_conditions": [
+                {
+                    "RunID": 5,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 10,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 11,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 21,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 22,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 30,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 34,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 39,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 46,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 50,
+                    "RunFault": "Healthy"
+                }
+            ],
+            "accuracy": 0.969,
+            "balanced_accuracy": 0.9671268322786206,
+            "macro_f1": 0.9665404341182751,
+            "class_recall": {
+                "Air Leakage": 0.9606656580937972,
+                "Healthy": 0.9771265189421015,
+                "Pressure Drop": 0.9646153846153847,
+                "Seal Wear": 0.9723502304147466,
+                "Valve Sticking": 0.9608763693270735
+            }
+        },
+        {
+            "fold": 4,
+            "train_run_ids": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                15,
+                16,
+                17,
+                19,
+                20,
+                21,
+                22,
+                24,
+                26,
+                28,
+                29,
+                30,
+                32,
+                33,
+                34,
+                35,
+                37,
+                38,
+                39,
+                42,
+                43,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50
+            ],
+            "test_run_ids": [
+                14,
+                18,
+                23,
+                25,
+                27,
+                31,
+                36,
+                40,
+                41,
+                44
+            ],
+            "test_run_conditions": [
+                {
+                    "RunID": 14,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 18,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 23,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 25,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 27,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 31,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 36,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 40,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 41,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 44,
+                    "RunFault": "Healthy"
+                }
+            ],
+            "accuracy": 0.967,
+            "balanced_accuracy": 0.965226089812958,
+            "macro_f1": 0.9647442893057386,
+            "class_recall": {
+                "Air Leakage": 0.9477848101265823,
+                "Healthy": 0.9726507713884993,
+                "Pressure Drop": 0.9810126582278481,
+                "Seal Wear": 0.9940828402366864,
+                "Valve Sticking": 0.9305993690851735
+            }
+        },
+        {
+            "fold": 5,
+            "train_run_ids": [
+                2,
+                3,
+                4,
+                5,
+                6,
+                8,
+                9,
+                10,
+                11,
+                14,
+                15,
+                16,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                50
+            ],
+            "test_run_ids": [
+                1,
+                7,
+                12,
+                13,
+                17,
+                28,
+                37,
+                38,
+                48,
+                49
+            ],
+            "test_run_conditions": [
+                {
+                    "RunID": 1,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 7,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 12,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 13,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 17,
+                    "RunFault": "Pressure Drop"
+                },
+                {
+                    "RunID": 28,
+                    "RunFault": "Air Leakage"
+                },
+                {
+                    "RunID": 37,
+                    "RunFault": "Seal Wear"
+                },
+                {
+                    "RunID": 38,
+                    "RunFault": "Healthy"
+                },
+                {
+                    "RunID": 48,
+                    "RunFault": "Valve Sticking"
+                },
+                {
+                    "RunID": 49,
+                    "RunFault": "Air Leakage"
+                }
+            ],
+            "accuracy": 0.92875,
+            "balanced_accuracy": 0.9115988129622492,
+            "macro_f1": 0.9161937589653704,
+            "class_recall": {
+                "Air Leakage": 0.7078651685393258,
+                "Healthy": 0.9915552427867699,
+                "Pressure Drop": 0.953416149068323,
+                "Seal Wear": 0.9751098096632503,
+                "Valve Sticking": 0.9300476947535771
+            }
+        }
+    ]
+}
