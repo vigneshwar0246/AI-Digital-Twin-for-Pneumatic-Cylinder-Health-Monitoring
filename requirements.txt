@@ -1,4 +1,10 @@
 numpy>=2.1
 pandas>=2.3
-scikit-learn>=1.7
+scikit-learn>=1.9,<2
 joblib>=1.5
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+pydantic>=2.10,<3
+pytest>=8.3,<9
+httpx>=0.28,<1
+websockets>=14,<16
