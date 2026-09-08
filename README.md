@@ -306,3 +306,17 @@ python -m backend.simulator.validate_dataset_v2_1
 
 The models and reported evaluation results come from synthetic simulation data. The health regressor is experimental, and RUL is returned only when a measurable declining health trend exists. Physical sensor calibration, run-to-failure collection, industrial safety validation, and a hardware control layer remain future work. See [the frontend contract](docs/frontend_api_contract.md) for exact payloads.
 
+----------------------------------------------------------------------------------------
+terminal 1
+
+cd D:\DigitalTwin-PneumaticCylinder
+$env:CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
+.\.venv\Scripts\python.exe -m uvicorn backend.api.main:app --host 127.0.0.1 --port 8000
+-----------------------------------------------------------------------------------------
+
+terminal 2
+
+cd D:\DigitalTwin-PneumaticCylinder\frontend
+npm.cmd run dev
+
+----------------------------------------------------------------------------------------
