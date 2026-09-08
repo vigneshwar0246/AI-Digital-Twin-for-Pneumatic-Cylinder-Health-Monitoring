@@ -6,6 +6,7 @@ simulation run, preventing information leakage.
 """
 
 import pandas as pd
+from collections import defaultdict, deque
 
 from backend.config.constants import MAX_LOAD
 
@@ -45,6 +46,33 @@ FEATURE_COLUMNS = (
     BASE_FEATURES
     + ENGINEERED_FEATURES
 )
+
+
+class OnlineFeatureBuffer:
+    """Bounded, independent session buffers using the offline feature path."""
+
+    def __init__(self, max_history=100):
+        if max_history < ROLLING_WINDOW + 1:
+            raise ValueError("max_history must be at least 11")
+        self.max_history = max_history
+        self._buffers = defaultdict(lambda: deque(maxlen=max_history))
+
+    def add(self, session_id, reading):
+        rows = self._buffers[session_id]
+        row = {name: float(reading[name]) for name in BASE_FEATURES}
+        rows.append(row)
+        frame = pd.DataFrame(list(rows))
+        frame["RunID"] = session_id
+        frame["Step"] = range(len(frame))
+        engineered = add_temporal_features(frame)
+        features = engineered.iloc[-1][FEATURE_COLUMNS].astype(float).to_dict()
+        return features, len(rows) < ROLLING_WINDOW
+
+    def reset(self, session_id):
+        self._buffers.pop(session_id, None)
+
+    def size(self, session_id):
+        return len(self._buffers.get(session_id, ()))
 
 
 def rolling_standard_deviation(

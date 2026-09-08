@@ -10,3 +10,5 @@ dist/
 build/
 models/*.joblib
 backend/ai/*.pkl
+data/*.db
+data/*.db-*
