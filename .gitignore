@@ -12,3 +12,7 @@ models/*.joblib
 backend/ai/*.pkl
 data/*.db
 data/*.db-*
+.pytest_cache/
+__pycache__/
+*.pyc
+.env
