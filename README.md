@@ -176,31 +176,19 @@ cd AI-DigitalTwin-PneumaticCylinder
 pip install -r requirements.txt
 ```
 
-### Start Backend (terminal 1, fixed port 8000)
+### Start Backend
 
-```powershell
-cd D:\DigitalTwin-PneumaticCylinder
-$env:CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
-.\.venv\Scripts\python.exe -m uvicorn backend.api.main:app --host 127.0.0.1 --port 8000
+```bash
+python backend/app.py
 ```
 
-### Start Frontend (terminal 2, fixed port 5173)
+### Start Frontend
 
-```powershell
-cd D:\DigitalTwin-PneumaticCylinder\frontend
-npm.cmd run dev
-```
-
-The application is available at `http://127.0.0.1:5173`; API documentation is at
-`http://127.0.0.1:8000/docs`. Vite uses `strictPort`, so it will report an error
-instead of silently switching to another port when 5173 is occupied.
-
-### One-click Windows startup
-
-After installing the Python and frontend dependencies once, double-click
-`start.bat` from the project root. It starts the backend and frontend in separate
-terminal windows, waits until both fixed-port services respond, and then opens the
-application in your default browser. Close both service windows to stop the project.
+```bash
+cd frontend
+npm install
+npm run dev
+```"
 
 ---
 
@@ -282,7 +270,7 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 python -m backend.ai.train_v2_1          # only if the classifier artifact is absent
 python -m backend.ai.train_health_v2_1   # creates the separate health artifact
-python -m uvicorn backend.api.main:app --reload --host 127.0.0.1 --port 8000
+python -m uvicorn backend.api.main:app --reload
 ```
 
 Use a scikit-learn runtime compatible with the version that generated each joblib artifact. OpenAPI is at `http://127.0.0.1:8000/docs`.
@@ -322,13 +310,21 @@ The models and reported evaluation results come from synthetic simulation data. 
 terminal 1
 
 cd D:\DigitalTwin-PneumaticCylinder
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+.\.venv\Scripts\Activate.ps1
 $env:CORS_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
-.\.venv\Scripts\python.exe -m uvicorn backend.api.main:app --host 127.0.0.1 --port 8000
+python -m uvicorn backend.api.main:app --host 127.0.0.1 --port 8001
+
 -----------------------------------------------------------------------------------------
 
 terminal 2
 
 cd D:\DigitalTwin-PneumaticCylinder\frontend
+$env:VITE_API_BASE_URL="http://127.0.0.1:8001"
 npm.cmd run dev
 
+----------------------------------------------------------------------------------------
+to run 
+
+double tap the bat file!!
 ----------------------------------------------------------------------------------------
