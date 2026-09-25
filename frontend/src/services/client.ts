@@ -1,5 +1,5 @@
 import type {Fault,Health,Model,Prediction,Reading,Simulation,Stored} from '../types';
-export const baseURL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
+export const baseURL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8001').replace(/\/+$/, '');
 export class ApiError extends Error { constructor(public status:number,public code:string,message:string,public details:unknown=null){super(message)} }
 export async function request<T>(path:string,method='GET',body?:unknown):Promise<T>{
  const response=await fetch(`${baseURL}/api/v1${path}`,{method,headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(12000)});

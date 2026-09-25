@@ -1,6 +1,6 @@
 # Frontend API Contract (V2.1)
 
-Base URL: `http://127.0.0.1:8000`. OpenAPI: `/docs`. JSON fields use `snake_case`. Configure browser origins with the comma-separated `CORS_ORIGINS` environment variable (defaults: `http://localhost:3000,http://localhost:5173`).
+Base URL: `http://127.0.0.1:8001` when using `start.bat` (or configure `VITE_API_BASE_URL`). OpenAPI: `/docs`. JSON fields use `snake_case`. Configure browser origins with the comma-separated `CORS_ORIGINS` environment variable.
 
 ## Types
 
